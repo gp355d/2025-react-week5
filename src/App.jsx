@@ -26,6 +26,7 @@ function App() {
       })
       
       getCart();
+      closeModal();
       alert(res.data.message)
     } catch (error) {
       alert(error.response.data)
@@ -76,9 +77,7 @@ function App() {
   }
   const getCart = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);
-      // console.log(res.data.data);
-      
+      const res = await axios.get(`${BASE_URL}/v2/api/${API_PATH}/cart`);      
       setCart(res.data.data)
     } catch (error) {
       alert(error.response.data)
@@ -114,6 +113,7 @@ function App() {
 
   const closeModal = () => {
     const modalInstance = Modal.getInstance(productModalRef.current);
+    setQtySelect(1)
     modalInstance.hide();
   };
 
@@ -133,7 +133,6 @@ function App() {
     reset
   } = useForm()
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     const {message, ...user} = data;
   
     const userInfo = {
@@ -141,9 +140,7 @@ function App() {
         user,
         message
       }
-    }
-    console.log(userInfo);
-    
+    }    
     checkout(userInfo);
   })
   const checkout = async(data) => {
@@ -427,7 +424,7 @@ function App() {
               }
             })}
               id="tel"
-              type="text"
+              type="tel"
               className="form-control"
               placeholder="請輸入電話"
             />
@@ -465,7 +462,7 @@ function App() {
             ></textarea>
           </div>
           <div className="text-end">
-            <button type="submit" className="btn btn-danger">
+            <button type="submit" className="btn btn-danger" disabled={cart.carts?.length === 0}>
               送出訂單
             </button>
           </div>
